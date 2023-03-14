@@ -16,7 +16,7 @@ import {
   ThumbUpAltOutlined,
 } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { deletePost, likePost } from "../../../actions/posts";
+import { deletePost, likePost } fromd "../../../actions/posts";
 import { StyledCard } from "./styles";
 
 function Post({ post, setCurrentId }) {
