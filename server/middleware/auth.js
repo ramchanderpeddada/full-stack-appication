@@ -1,24 +1,18 @@
 import jwt from "jsonwebtoken";
 
-const auth = async (req, res, next) => {
+export const verifyToken = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    const isCustomAuth = token?.length < 500;
+    const token = req.header("Authorization");
 
-    let decodedData;
+    if (!token) return res.status(401).json({ error: "Access denied" });
 
-    if (token && isCustomAuth) {
-      decodedData = jwt.verify(token, "test");
-      req.userId = decodedData?.id;
-    } else {
-      decodedData = jwt.verify(token);
-      req.userId = decodedData?.sub; //google auth
+    if (token.startsWith("Bearer ")) {
+      token = token.slice(7, token.length).trimLeft();
     }
-
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
     next();
   } catch (err) {
-    console.log(err);
+    res.status(401).json({ error: err.message });
   }
 };
-
-export default auth;
